@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Learning Hub — CareerAI</title>
+<link rel="stylesheet" href="/global.css">
+<style>
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filter-btn{padding:7px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--textDim);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold)}
+.filter-btn.active{background:var(--goldDim);border-color:rgba(245,200,66,.4);color:var(--gold)}
+.courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.course-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all .3s;display:flex;flex-direction:column}
+.course-card:hover{border-color:rgba(245,200,66,.3);transform:translateY(-2px);box-shadow:var(--shadow-gold)}
+.course-platform{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.platform-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+.platform-coursera{background:rgba(0,86,210,.2);color:#4d9fff;border:1px solid rgba(77,159,255,.3)}
+.platform-udemy{background:rgba(236,72,153,.15);color:#f472b6;border:1px solid rgba(244,114,182,.3)}
+.platform-edx{background:var(--redDim);color:var(--red);border:1px solid rgba(255,77,106,.3)}
+.platform-youtube{background:rgba(255,0,0,.1);color:#ff6b6b;border:1px solid rgba(255,107,107,.3)}
+.course-rating{font-size:12px;color:var(--gold);font-weight:700}
+.course-title{font-family:var(--ff-head);font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.4}
+.course-instructor{font-size:12px;color:var(--textDim);margin-bottom:14px}
+.course-meta{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.course-link{margin-top:auto;display:flex;align-items:center;justify-content:center;padding:10px;background:var(--goldDim);border:1px solid rgba(245,200,66,.3);border-radius:var(--rad-sm);color:var(--gold);font-size:13px;font-weight:700;text-decoration:none;transition:all .25s}
+.course-link:hover{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000}
+.search-row{display:flex;gap:12px;margin-bottom:16px}
+.search-row input{flex:1}
+@media(max-width:900px){.courses-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span style="font-size:22px">⚡</span>
+    <div>CareerAI<span>Intelligence Platform</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <a href="/dashboard" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <div class="nav-section-label">Tools</div>
+    <a href="/market" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      Live Market Demand
+    </a>
+    <a href="/aichat" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      AI Assistant
+    </a>
+    <a href="/resume" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Resume Analyzer
+    </a>
+    <a href="/mock-interview" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      Mock Interview
+    </a>
+    <a href="/learning" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Learning Hub
+    </a>
+    <div class="nav-section-label">Community</div>
+    <a href="/community" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Community Feed
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <img class="user-avatar" id="sidebarAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="avatar">
+      <div>
+        <div class="user-name" id="sidebarUsername">Loading…</div>
+        <div class="user-role">Career Explorer</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </div>
+</aside>
+<div class="main-content">
+  <div class="page-header">
+    <div class="page-title">Learning Hub</div>
+    <div class="page-subtitle">Curated courses from top platforms to advance your career</div>
+  </div>
+  <div class="page-body">
+
+    <div class="search-row animate-fadeUp">
+      <input class="form-input" id="courseSearch" placeholder="🔍  Search courses by skill or topic…" oninput="filterCourses()">
+    </div>
+
+    <div class="filter-row animate-fadeUp">
+      <button class="filter-btn active" onclick="setPlatform(this,'')">All Platforms</button>
+      <button class="filter-btn" onclick="setPlatform(this,'Coursera')">Coursera</button>
+      <button class="filter-btn" onclick="setPlatform(this,'Udemy')">Udemy</button>
+      <button class="filter-btn" onclick="setPlatform(this,'edX')">edX</button>
+    </div>
+
+    <div class="filter-row" style="margin-top:-12px">
+      <button class="filter-btn active" onclick="setLevel(this,'')">All Levels</button>
+      <button class="filter-btn" onclick="setLevel(this,'Beginner')">Beginner</button>
+      <button class="filter-btn" onclick="setLevel(this,'Intermediate')">Intermediate</button>
+      <button class="filter-btn" onclick="setLevel(this,'Advanced')">Advanced</button>
+      <button class="filter-btn" onclick="setLevel(this,'Professional')">Professional</button>
+    </div>
+
+    <div class="courses-grid" id="coursesGrid">
+      <div class="spinner"></div>
+    </div>
+
+  </div>
+</div>
+</div>
+<script>
+const token=localStorage.getItem('token');
+const user=JSON.parse(localStorage.getItem('user')||'{}');
+if(!token) window.location.href='/';
+function logout(){localStorage.clear();window.location.href='/'}
+
+let allCourses=[];
+let activePlatform='';
+let activeLevel='';
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const nameEl=document.getElementById('sidebarUsername');
+  const picEl=document.getElementById('sidebarAvatar');
+  if(nameEl) nameEl.textContent=user.username||'User';
+  if(picEl&&user.profile_pic) picEl.src=user.profile_pic;
+  document.querySelectorAll('.nav-item').forEach(a=>{if(a.getAttribute('href')===window.location.pathname)a.classList.add('active')});
+  loadCourses();
+});
+
+async function loadCourses(){
+  try{
+    const r=await fetch('/learning/courses');
+    const d=await r.json();
+    allCourses=d.courses;
+    renderCourses(allCourses);
+  }catch(e){
+    document.getElementById('coursesGrid').innerHTML='<div class="empty-state"><p>Error loading courses.</p></div>';
+  }
+}
+
+function setPlatform(btn, p){
+  document.querySelectorAll('.filter-row:nth-child(1) .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activePlatform=p; filterCourses();
+}
+function setLevel(btn, l){
+  document.querySelectorAll('.filter-row:nth-child(2) .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeLevel=l; filterCourses();
+}
+
+function filterCourses(){
+  const q=document.getElementById('courseSearch').value.toLowerCase();
+  let filtered=allCourses.filter(c=>{
+    const matchQ=!q||c.title.toLowerCase().includes(q)||c.skills.some(s=>s.toLowerCase().includes(q))||c.tags.some(t=>t.includes(q));
+    const matchP=!activePlatform||c.platform===activePlatform;
+    const matchL=!activeLevel||c.level===activeLevel;
+    return matchQ&&matchP&&matchL;
+  });
+  renderCourses(filtered);
+}
+
+function platClass(p){
+  return {'Coursera':'platform-coursera','Udemy':'platform-udemy','edX':'platform-edx','YouTube':'platform-youtube'}[p]||'badge-muted';
+}
+function stars(r){return '★'.repeat(Math.round(r))+'☆'.repeat(5-Math.round(r))}
+function levelColor(l){return{'Beginner':'badge-green','Intermediate':'badge-gold','Advanced':'badge-red','Professional':'badge-purple'}[l]||'badge-muted'}
+
+function renderCourses(courses){
+  const grid=document.getElementById('coursesGrid');
+  if(!courses.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No courses found for your filters.</p></div>';return}
+  grid.innerHTML=courses.map((c,i)=>
+    '<div class="course-card animate-fadeUp" style="animation-delay:'+i*.04+'s">'+
+    '<div class="course-platform"><span class="platform-badge '+platClass(c.platform)+'">'+c.platform+'</span><span class="course-rating">'+stars(c.rating)+' '+c.rating+'</span></div>'+
+    '<div class="course-title">'+c.title+'</div>'+
+    '<div class="course-instructor">by '+c.instructor+'</div>'+
+    '<div class="course-meta">'+
+      '<span class="badge '+levelColor(c.level)+'">'+c.level+'</span>'+
+      '<span class="badge badge-muted">⏱ '+c.duration+'</span>'+
+    '</div>'+
+    '<div class="skill-tags" style="margin-bottom:16px">'+c.skills.slice(0,3).map(s=>'<span class="skill-tag" style="font-size:11px">'+s+'</span>').join('')+'</div>'+
+    '<a href="'+c.url+'" target="_blank" class="course-link">Start Course →</a>'+
+    '</div>'
+  ).join('');
+}
+</script>
+</body>
+</html>

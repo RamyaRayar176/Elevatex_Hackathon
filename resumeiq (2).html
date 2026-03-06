@@ -1,0 +1,2602 @@
+<!DOCTYPE html>
+<!-- Version: 2.1.0-fixed-flash-lite - Updated: 2026-03-05 21:30 -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResumeIQ Analyser — CareerAI</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0b0f;
+      --bg2: #0f1117;
+      --bg3: #161820;
+      --panel: #1a1d27;
+      --border: #252836;
+      --border2: #2e3246;
+      --gold: #f5c842;
+      --gold2: #e8a800;
+      --goldDim: rgba(245, 200, 66, .12);
+      --goldGlow: rgba(245, 200, 66, .25);
+      --red: #ff4d6a;
+      --redDim: rgba(255, 77, 106, .15);
+      --green: #3ddc84;
+      --greenDim: rgba(61, 220, 132, .12);
+      --blue: #4d9fff;
+      --blueDim: rgba(77, 159, 255, .12);
+      --purple: #9d7fff;
+      --purpleDim: rgba(157, 127, 255, .12);
+      --text: #e8eaf0;
+      --textDim: #8890a8;
+      --textMut: #4a5068;
+      --radius: 14px;
+      --rad-sm: 8px;
+      --rad-lg: 20px;
+      --shadow: 0 8px 40px rgba(0, 0, 0, .5);
+      --shadow-gold: 0 8px 40px rgba(245, 200, 66, .15);
+      --ff-head: 'Syne', sans-serif;
+      --ff-body: 'DM Sans', sans-serif;
+      --nav-w: 240px;
+      --header-h: 64px;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .18;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -30vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      height: 60vh;
+      background: radial-gradient(ellipse, rgba(245, 200, 66, .06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── SIDEBAR ─── */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1
+    }
+
+    .sidebar {
+      width: var(--nav-w);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform .3s ease;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      font-family: var(--ff-head);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -0.5px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--textMut);
+      display: block;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 0;
+      overflow-y: auto
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--textMut);
+      text-transform: uppercase;
+      padding: 16px 24px 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: var(--textDim);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all .2s;
+      position: relative;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      background: none;
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, .04);
+      border-left-color: var(--border2)
+    }
+
+    .nav-item.active {
+      color: var(--gold);
+      background: var(--goldDim);
+      border-left-color: var(--gold)
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: #000;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border)
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--rad-sm);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .user-avatar-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-head);
+      font-size: 14px;
+      font-weight: 800;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: var(--textMut)
+    }
+
+    /* ── MAIN ─── */
+    .main-content {
+      margin-left: var(--nav-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh
+    }
+
+    .page-header {
+      padding: 32px 40px 0
+    }
+
+    .page-title {
+      font-family: var(--ff-head);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--textDim)
+    }
+
+    .page-body {
+      padding: 24px 40px 40px
+    }
+
+    /* ── HERO KICKER ─── */
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--goldDim);
+      border: 1px solid rgba(245, 200, 66, .25);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-kicker-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    /* ── CARDS ─── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .card:hover {
+      border-color: var(--border2)
+    }
+
+    .card-gold {
+      border-color: rgba(245, 200, 66, .3);
+      background: linear-gradient(135deg, var(--panel) 0%, rgba(245, 200, 66, .04) 100%)
+    }
+
+    .card-title {
+      font-family: var(--ff-head);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--textDim);
+      margin-bottom: 20px
+    }
+
+    /* ── BUTTONS ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: var(--rad-sm);
+      font-family: var(--ff-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+      color: #000;
+      border-color: transparent;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-gold)
+    }
+
+    .btn-primary:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--border2);
+      color: var(--textDim)
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+      padding: 14px 20px;
+      font-size: 15px
+    }
+
+    /* ── FORM ─── */
+    .form-group {
+      margin-bottom: 20px
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--textDim);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--rad-sm);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-size: 14px;
+      transition: all .25s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--goldDim);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--textMut)
+    }
+
+    .form-select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' %3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f5c842' stroke-width='1.5' stroke-linecap='round' /%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 130px;
+      line-height: 1.6
+    }
+
+    /* ── BADGES / PILLS ─── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+
+    .badge-gold {
+      background: var(--goldDim);
+      color: var(--gold);
+      border: 1px solid rgba(245, 200, 66, .3)
+    }
+
+    .badge-green {
+      background: var(--greenDim);
+      color: var(--green);
+      border: 1px solid rgba(61, 220, 132, .3)
+    }
+
+    .badge-red {
+      background: var(--redDim);
+      color: var(--red);
+      border: 1px solid rgba(255, 77, 106, .3)
+    }
+
+    .badge-blue {
+      background: var(--blueDim);
+      color: var(--blue);
+      border: 1px solid rgba(77, 159, 255, .3)
+    }
+
+    .badge-purple {
+      background: var(--purpleDim);
+      color: var(--purple);
+      border: 1px solid rgba(157, 127, 255, .3)
+    }
+
+    .badge-muted {
+      background: rgba(255, 255, 255, .06);
+      color: var(--textDim);
+      border: 1px solid var(--border)
+    }
+
+    /* ── ALERTS ─── */
+    .alert {
+      padding: 13px 16px;
+      border-radius: var(--rad-sm);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none
+    }
+
+    .alert.show {
+      display: block
+    }
+
+    .alert-error {
+      background: var(--redDim);
+      border: 1px solid rgba(255, 77, 106, .4);
+      color: var(--red)
+    }
+
+    .alert-success {
+      background: var(--greenDim);
+      border: 1px solid rgba(61, 220, 132, .4);
+      color: var(--green)
+    }
+
+    .alert-info {
+      background: var(--blueDim);
+      border: 1px solid rgba(77, 159, 255, .4);
+      color: var(--blue)
+    }
+
+    /* ── PROGRESS ─── */
+    .progress-bar {
+      height: 6px;
+      background: var(--bg3);
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--gold2), var(--gold));
+      transition: width .8s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .progress-fill-green {
+      background: linear-gradient(90deg, #2db368, var(--green))
+    }
+
+    .progress-fill-blue {
+      background: linear-gradient(90deg, #2575e8, var(--blue))
+    }
+
+    .progress-fill-red {
+      background: linear-gradient(90deg, #cc2844, var(--red))
+    }
+
+    /* ── SPINNER ─── */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      vertical-align: middle
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    /* ── STAT CARDS ─── */
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all .3s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px)
+    }
+
+    .stat-value {
+      font-family: var(--ff-head);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--textDim);
+      font-weight: 500
+    }
+
+    /* ── SKILL TAGS ─── */
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .skill-tag {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--textDim);
+      transition: all .2s;
+    }
+
+    .skill-tag.matched {
+      background: var(--greenDim);
+      border-color: rgba(61, 220, 132, .4);
+      color: var(--green)
+    }
+
+    .skill-tag.missing {
+      background: var(--redDim);
+      border-color: rgba(255, 77, 106, .3);
+      color: var(--red)
+    }
+
+    .skill-tag.trending {
+      background: var(--blueDim);
+      border-color: rgba(77, 159, 255, .3);
+      color: var(--blue)
+    }
+
+    /* ── SECTION LABEL ─── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--textMut);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border)
+    }
+
+    /* ── DIVIDER ─── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0
+    }
+
+    /* ── GRID ─── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px
+    }
+
+    /* ── UPLOAD ZONE ─── */
+    .upload-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius);
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg3);
+      position: relative;
+      transition: all .3s;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragging {
+      border-color: var(--gold);
+      background: rgba(245, 200, 66, .04)
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%
+    }
+
+    .upload-icon {
+      font-size: 2rem;
+      margin-bottom: 10px
+    }
+
+    .upload-zone h3 {
+      font-family: var(--ff-head);
+      font-size: 15px;
+      margin-bottom: 5px
+    }
+
+    .upload-zone p {
+      color: var(--textDim);
+      font-size: 13px
+    }
+
+    /* ── LOADING STEPS ─── */
+    .loader {
+      text-align: center;
+      padding: 60px 20px;
+      display: none
+    }
+
+    .loader-title {
+      font-family: var(--ff-head);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px
+    }
+
+    .loader-sub {
+      color: var(--textDim);
+      font-size: 13px;
+      margin-bottom: 28px
+    }
+
+    .loader-steps {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      max-width: 340px;
+      margin: 0 auto
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--rad-sm);
+      font-size: 13px;
+      color: var(--textDim);
+      transition: all .4s;
+    }
+
+    .step-item.active {
+      color: var(--text);
+      border-color: var(--gold);
+      background: var(--goldDim)
+    }
+
+    .step-item.done {
+      color: var(--green);
+      border-color: rgba(61, 220, 132, .3);
+      background: var(--greenDim)
+    }
+
+    .step-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px
+    }
+
+    .step-item.active .step-dot {
+      background: var(--gold);
+      animation: spin .8s linear infinite
+    }
+
+    .step-item.done .step-dot {
+      background: var(--green)
+    }
+
+    /* ── SCORE RING ─── */
+    .score-ring {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0
+    }
+
+    .score-ring svg {
+      transform: rotate(-90deg)
+    }
+
+    .ring-track {
+      fill: none;
+      stroke: var(--bg3);
+      stroke-width: 10
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.4s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .score-ring-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center
+    }
+
+    .score-big {
+      font-family: var(--ff-head);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1
+    }
+
+    .score-pct {
+      font-size: 12px;
+      color: var(--textDim);
+      margin-top: 2px
+    }
+
+    /* ── ELIGIBILITY CARD ─── */
+    .eligibility-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .elig-role {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--textMut);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px
+    }
+
+    .elig-title {
+      font-family: var(--ff-head);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px
+    }
+
+    .elig-verdict {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px
+    }
+
+    .verdict-high {
+      background: var(--greenDim);
+      border: 1px solid rgba(61, 220, 132, .3);
+      color: var(--green)
+    }
+
+    .verdict-mid {
+      background: var(--goldDim);
+      border: 1px solid rgba(245, 200, 66, .3);
+      color: var(--gold)
+    }
+
+    .verdict-low {
+      background: var(--redDim);
+      border: 1px solid rgba(255, 77, 106, .3);
+      color: var(--red)
+    }
+
+    .elig-sub {
+      font-size: 13px;
+      color: var(--textDim);
+      line-height: 1.6
+    }
+
+    .skill-breakdown {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .breakdown-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px
+    }
+
+    .breakdown-label {
+      color: var(--textDim);
+      width: 120px;
+      flex-shrink: 0
+    }
+
+    .breakdown-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--bg3);
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .breakdown-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s .3s ease
+    }
+
+    .breakdown-val {
+      font-weight: 700;
+      width: 40px;
+      text-align: right;
+      font-size: 12px
+    }
+
+    /* ── GAP SKILL CARDS ─── */
+    .gap-skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px
+    }
+
+    .gap-skill-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 14px;
+      cursor: pointer;
+      transition: all .3s;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gap-skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      transform: scaleX(0);
+      transition: transform .3s;
+      transform-origin: left
+    }
+
+    .gap-skill-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(245, 200, 66, .1)
+    }
+
+    .gap-skill-card:hover::before {
+      transform: scaleX(1)
+    }
+
+    .gap-priority-tag {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .priority-high {
+      background: var(--redDim);
+      color: var(--red)
+    }
+
+    .priority-medium {
+      background: var(--goldDim);
+      color: var(--gold)
+    }
+
+    .gap-skill-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      display: block
+    }
+
+    .gap-skill-name {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: var(--text)
+    }
+
+    .gap-skill-demand {
+      font-size: 11px;
+      color: var(--textDim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px
+    }
+
+    .demand-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%
+    }
+
+    .demand-high {
+      background: var(--green)
+    }
+
+    .demand-medium {
+      background: var(--gold)
+    }
+
+    /* ── COURSE CARDS ─── */
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .course-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: all .25s;
+      text-decoration: none;
+    }
+
+    .course-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 8px 24px rgba(245, 200, 66, .08);
+      transform: translateX(3px)
+    }
+
+    .course-platform-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--rad-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0
+    }
+
+    .pi-nptel {
+      background: var(--goldDim)
+    }
+
+    .pi-linkedin {
+      background: var(--blueDim)
+    }
+
+    .pi-youtube {
+      background: var(--redDim)
+    }
+
+    .pi-coursera {
+      background: var(--greenDim)
+    }
+
+    .pi-udemy {
+      background: var(--purpleDim)
+    }
+
+    .course-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .course-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 6px
+    }
+
+    .platform-pill {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .pill-nptel {
+      background: var(--goldDim);
+      color: var(--gold)
+    }
+
+    .pill-linkedin {
+      background: var(--blueDim);
+      color: var(--blue)
+    }
+
+    .pill-youtube {
+      background: var(--redDim);
+      color: var(--red)
+    }
+
+    .pill-coursera {
+      background: var(--greenDim);
+      color: var(--green)
+    }
+
+    .pill-udemy {
+      background: var(--purpleDim);
+      color: var(--purple)
+    }
+
+    .level-pill {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: var(--panel);
+      color: var(--textDim);
+      border: 1px solid var(--border2);
+      font-weight: 600
+    }
+
+    .free-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: var(--greenDim);
+      color: var(--green);
+      border: 1px solid rgba(61, 220, 132, .25)
+    }
+
+    .course-card-title {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: 3px
+    }
+
+    .course-card-meta {
+      font-size: 12px;
+      color: var(--textDim);
+      margin-bottom: 6px
+    }
+
+    .course-skill-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap
+    }
+
+    .course-skill-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: var(--goldDim);
+      color: var(--gold);
+      border: 1px solid rgba(245, 200, 66, .2)
+    }
+
+    .course-card-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--rad-sm);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: all .25s;
+      font-family: var(--ff-head)
+    }
+
+    .course-card-link:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-gold)
+    }
+
+    .course-match-bar {
+      margin-top: 8px
+    }
+
+    .course-match-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px
+    }
+
+    .course-match-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--textDim);
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .course-match-pct {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--gold)
+    }
+
+    .course-match-track {
+      height: 4px;
+      background: var(--bg);
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .course-match-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--gold2), var(--gold));
+      transition: width 1s .5s ease
+    }
+
+    /* ── FILTER BUTTONS ─── */
+    .course-filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px
+    }
+
+    .cf-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--textDim);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: var(--ff-body)
+    }
+
+    .cf-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .cf-btn.active {
+      background: var(--goldDim);
+      border-color: rgba(245, 200, 66, .4);
+      color: var(--gold)
+    }
+
+    /* ── MODAL ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      backdrop-filter: blur(8px);
+      display: none;
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px
+    }
+
+    .modal-overlay.open {
+      display: flex
+    }
+
+    .modal {
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      border-radius: var(--rad-lg);
+      width: 100%;
+      max-width: 600px;
+      max-height: 88vh;
+      overflow-y: auto;
+      animation: fadeUp .3s ease;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6)
+    }
+
+    .modal-top {
+      background: linear-gradient(135deg, var(--bg3), rgba(245, 200, 66, .06));
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .modal-top h2 {
+      font-family: var(--ff-head);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px
+    }
+
+    .modal-top p {
+      font-size: 13px;
+      color: var(--textDim)
+    }
+
+    .modal-close-x {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--rad-sm);
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      flex-shrink: 0
+    }
+
+    .modal-close-x:hover {
+      background: var(--border);
+      color: var(--red)
+    }
+
+    .modal-why-box {
+      margin: 20px 28px 0;
+      border-left: 3px solid var(--gold);
+      background: var(--goldDim);
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      font-size: 13px;
+      color: var(--textDim);
+      line-height: 1.6
+    }
+
+    .modal-why-box strong {
+      color: var(--text)
+    }
+
+    .modal-body {
+      padding: 20px 28px 28px
+    }
+
+    .modal-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--textMut);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .modal-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border)
+    }
+
+    .modal-course {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 10px;
+      transition: all .2s
+    }
+
+    .modal-course:hover {
+      border-color: var(--gold)
+    }
+
+    .modal-course-title {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 4px;
+      color: var(--text)
+    }
+
+    .modal-course-meta {
+      font-size: 12px;
+      color: var(--textDim);
+      margin-bottom: 10px
+    }
+
+    .modal-open-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: var(--rad-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: var(--ff-head);
+      text-align: center;
+      text-decoration: none
+    }
+
+    .modal-open-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-gold)
+    }
+
+    .modal-tip {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--textDim);
+      line-height: 1.5
+    }
+
+    /* ── CANDIDATE HEADER ─── */
+    .candidate-header {
+      background: linear-gradient(135deg, var(--panel) 0%, rgba(245, 200, 66, .06) 100%);
+      border: 1px solid rgba(245, 200, 66, .2);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .candidate-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-head);
+      font-size: 22px;
+      font-weight: 800;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .candidate-name {
+      font-family: var(--ff-head);
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px
+    }
+
+    .candidate-profile {
+      font-size: 13px;
+      color: var(--textDim);
+      margin-bottom: 10px
+    }
+
+    .candidate-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    /* ── SCROLLBAR ─── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 10px
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--textMut)
+    }
+
+    /* ── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    .animate-fadeUp {
+      animation: fadeUp .4s ease both
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn .3s ease both
+    }
+
+    /* ── MOBILE HAMBURGER ─── */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 100;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--rad-sm);
+      padding: 8px;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px
+    }
+
+    /* ── RESPONSIVE ─── */
+    @media(max-width:900px) {
+      .sidebar {
+        transform: translateX(-100%)
+      }
+
+      .sidebar.open {
+        transform: translateX(0)
+      }
+
+      .main-content {
+        margin-left: 0
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: 1fr
+      }
+
+      .page-header,
+      .page-body {
+        padding-left: 20px;
+        padding-right: 20px
+      }
+
+      .eligibility-card {
+        grid-template-columns: 1fr
+      }
+
+      .two-col-grid {
+        grid-template-columns: 1fr !important
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      .page-header {
+        padding-top: 64px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Hamburger (mobile) -->
+  <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- APP LAYOUT -->
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span>⚡</span>
+        <div>
+          Resume<span style="color:#fff">IQ</span>
+          <span class="sidebar-logo-sub">Career Intelligence</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Tools</div>
+        <button class="nav-item active" onclick="showTab('analyser',this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Resume Analyser
+          <span class="nav-badge">AI</span>
+        </button>
+        <button class="nav-item" onclick="showTab('courses',this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path
+              d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+          </svg>
+          Course Library
+        </button>
+        <div class="nav-section-label">Settings</div>
+
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar-box">R</div>
+          <div>
+            <div class="user-name">ResumeIQ User</div>
+            <div class="user-role">Career Analysis</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- PAGE: ANALYSER -->
+      <div id="tab-analyser">
+        <div class="page-header">
+          <div class="hero-kicker"><span class="hero-kicker-dot"></span> Live LinkedIn Trending Skills</div>
+          <h1 class="page-title">Analyse Resume. Match Your Role.</h1>
+          <p class="page-subtitle">Upload your resume, pick a target role — AI extracts your skills, checks LinkedIn
+            trends, scores eligibility and recommends courses.</p>
+        </div>
+
+        <div class="page-body">
+
+          <!-- CONFIG CARD -->
+          <div class="card card-gold" style="margin-bottom:20px">
+
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">🎯 Target Role</label>
+              <select class="form-select" id="targetRole">
+                <option value="All Roles">🌐 All Roles</option>
+                <option value="Data Analyst">📊 Data Analyst</option>
+                <option value="Machine Learning Engineer">🤖 Machine Learning Engineer</option>
+                <option value="Full Stack Developer" selected>💻 Full Stack Developer</option>
+                <option value="Frontend Developer">⚛️ Frontend Developer</option>
+                <option value="Backend Developer">⚙️ Backend Developer</option>
+                <option value="DevOps Engineer">🐳 DevOps Engineer</option>
+                <option value="Cloud Architect">☁️ Cloud Architect</option>
+                <option value="Data Engineer">🔧 Data Engineer</option>
+                <option value="AI/ML Research Engineer">🧠 AI/ML Research Engineer</option>
+                <option value="NLP / GenAI Engineer">✨ NLP / GenAI Engineer</option>
+                <option value="Cybersecurity Engineer">🔐 Cybersecurity Engineer</option>
+                <option value="UI/UX Designer">🎨 UI/UX Designer</option>
+                <option value="Product Manager">📋 Product Manager</option>
+                <option value="Data Science Intern">🔬 Data Science Intern</option>
+                <option value="QA Test Engineer">🧪 QA Test Engineer</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- UPLOAD CARD -->
+        <div class="card" style="margin-bottom:20px">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx" onchange="handleFile(this)">
+            <div class="upload-icon">📄</div>
+            <h3 id="uploadTitle">Drop your resume here</h3>
+            <p>Supports .txt, .pdf, .docx — Click or drag & drop</p>
+            <div id="fileBadge" style="display:none;margin-top:10px">
+              <span class="badge badge-green">✅ <span id="fileName"></span></span>
+            </div>
+          </div>
+
+          <div
+            style="text-align:center;color:var(--textMut);margin:16px 0;font-size:13px;display:flex;align-items:center;gap:10px">
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+            or paste resume text
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">📝 Resume Text</label>
+            <textarea class="form-textarea" id="resumeText" style="min-height:150px"
+              placeholder="Paste your full resume here — education, experience, skills, projects…"></textarea>
+          </div>
+
+          <div class="alert alert-error" id="errorBox"></div>
+
+          <button class="btn btn-primary btn-full" id="analyseBtn" onclick="analyseResume()" style="margin-top:16px">
+            <span class="spinner" id="btnSpinner" style="display:none"></span>
+            <span>⚡</span> <span id="btnText">Analyse Resume & Match Role</span>
+          </button>
+        </div>
+
+        <!-- LOADER -->
+        <div class="loader" id="loader">
+          <div class="loader-title">Analysing your resume…</div>
+          <div class="loader-sub">Gemini AI is reading, extracting skills, and checking LinkedIn trends</div>
+          <div class="loader-steps" id="loaderSteps">
+            <div class="step-item" id="step1">
+              <div class="step-dot">→</div>Extracting text &amp; detecting skills
+            </div>
+            <div class="step-item" id="step2">
+              <div class="step-dot">→</div>Checking LinkedIn trending skills
+            </div>
+            <div class="step-item" id="step3">
+              <div class="step-dot">→</div>Calculating eligibility score
+            </div>
+            <div class="step-item" id="step4">
+              <div class="step-dot">→</div>Finding recommended courses
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="results"></div>
+
+      </div>
+  </div>
+
+  <!-- PAGE: COURSES LIBRARY (hidden initially) -->
+  <div id="tab-courses" style="display:none">
+    <div class="page-header">
+      <h1 class="page-title">Course Library</h1>
+      <p class="page-subtitle">Browse all curated courses from NPTEL, LinkedIn Learning, YouTube & Coursera</p>
+    </div>
+    <div class="page-body">
+      <div class="card">
+        <div class="card-title">Run an analysis first</div>
+        <p style="font-size:14px;color:var(--textDim)">After analysing your resume, your personalised course
+          recommendations will appear here too.</p>
+      </div>
+    </div>
+  </div>
+
+  </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-top">
+        <div>
+          <h2 id="modalTitle">Skill</h2>
+          <p id="modalSub">Curated learning resources</p>
+        </div>
+        <button class="modal-close-x" onclick="closeModal()">✕</button>
+      </div>
+      <div id="modalWhyBox"></div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ══════════════════════════════════════════
+       COURSE DATABASE
+    ══════════════════════════════════════════ */
+    const COURSES_DB = {
+      'python': {
+        icon: '🐍', name: 'Python',
+        nptel: { title: 'Programming, Data Structures & Algorithms using Python', url: 'https://nptel.ac.in/courses/106106145', by: 'Prof. Madhavan Mukund · IIT Madras', level: 'Beginner', free: true },
+        linkedin: { title: 'Python Essential Training', url: 'https://www.linkedin.com/learning/python-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Python Full Course for Beginners', url: 'https://www.youtube.com/watch?v=_uQrJ0TkZlc', by: 'Programming with Mosh', level: 'Beginner', free: true },
+        coursera: { title: 'Python for Everybody Specialization', url: 'https://www.coursera.org/specializations/python', by: 'University of Michigan', level: 'Beginner', free: false }
+      },
+      'javascript': {
+        icon: '🟨', name: 'JavaScript',
+        linkedin: { title: 'JavaScript Essential Training', url: 'https://www.linkedin.com/learning/javascript-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'JavaScript Full Course (11 Hours)', url: 'https://www.youtube.com/watch?v=PkZNo7MFNFg', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'JavaScript for Beginners', url: 'https://www.coursera.org/learn/javascript-basics', by: 'University of California', level: 'Beginner', free: false }
+      },
+      'typescript': {
+        icon: '🔷', name: 'TypeScript',
+        linkedin: { title: 'TypeScript Essential Training', url: 'https://www.linkedin.com/learning/typescript-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'TypeScript Full Course', url: 'https://www.youtube.com/watch?v=BwCn3YHBjpI', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'react': {
+        icon: '⚛️', name: 'React',
+        linkedin: { title: 'React.js Essential Training', url: 'https://www.linkedin.com/learning/react-js-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'React Full Course 2024', url: 'https://www.youtube.com/watch?v=CgkZ7MvWUAA', by: 'freeCodeCamp', level: 'Intermediate', free: true },
+        coursera: { title: 'Meta Front-End Developer Certificate', url: 'https://www.coursera.org/professional-certificates/meta-front-end-developer', by: 'Meta', level: 'Beginner', free: false }
+      },
+      'next.js': {
+        icon: '▲', name: 'Next.js',
+        linkedin: { title: 'Next.js Essential Training', url: 'https://www.linkedin.com/learning/nextjs-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Next.js 14 Full Course', url: 'https://www.youtube.com/watch?v=ZjAqacIC_3c', by: 'Traversy Media', level: 'Intermediate', free: true }
+      },
+      'node.js': {
+        icon: '🟩', name: 'Node.js',
+        linkedin: { title: 'Node.js Essential Training', url: 'https://www.linkedin.com/learning/node-js-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Node.js Full Course', url: 'https://www.youtube.com/watch?v=Oe421EPjeBE', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'vue': {
+        icon: '💚', name: 'Vue.js',
+        linkedin: { title: 'Vue.js Essential Training', url: 'https://www.linkedin.com/learning/vue-js-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Vue.js Full Course', url: 'https://www.youtube.com/watch?v=VeNfHj6MhgA', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'angular': {
+        icon: '🔴', name: 'Angular',
+        linkedin: { title: 'Angular Essential Training', url: 'https://www.linkedin.com/learning/angular-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Angular Full Course', url: 'https://www.youtube.com/watch?v=3qBXWUpoPHo', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'tailwind css': {
+        icon: '💨', name: 'Tailwind CSS',
+        linkedin: { title: 'Tailwind CSS Essential Training', url: 'https://www.linkedin.com/learning/tailwind-css-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Tailwind CSS Full Course', url: 'https://www.youtube.com/watch?v=tS7upsfuxmo', by: 'Dave Gray', level: 'Beginner', free: true }
+      },
+      'sql': {
+        icon: '🗄️', name: 'SQL',
+        nptel: { title: 'Database Management System', url: 'https://nptel.ac.in/courses/106105175', by: 'Prof. Partha Pratim Das · IIT Kharagpur', level: 'Intermediate', free: true },
+        linkedin: { title: 'SQL Essential Training', url: 'https://www.linkedin.com/learning/sql-essential-training-20685876?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'SQL Full Course', url: 'https://www.youtube.com/watch?v=HXV3zeQKqGY', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'Google Data Analytics Certificate', url: 'https://www.coursera.org/professional-certificates/google-data-analytics', by: 'Google', level: 'Beginner', free: false }
+      },
+      'mongodb': {
+        icon: '🍃', name: 'MongoDB',
+        linkedin: { title: 'MongoDB Essential Training', url: 'https://www.linkedin.com/learning/mongodb-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'MongoDB Full Course', url: 'https://www.youtube.com/watch?v=ExcRbA7fy_A', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'postgresql': {
+        icon: '🐘', name: 'PostgreSQL',
+        linkedin: { title: 'PostgreSQL Essential Training', url: 'https://www.linkedin.com/learning/postgresql-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'PostgreSQL Full Course', url: 'https://www.youtube.com/watch?v=qw--VYLpxG4', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'redis': {
+        icon: '🔴', name: 'Redis',
+        linkedin: { title: 'Redis Essential Training', url: 'https://www.linkedin.com/learning/redis-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Redis Crash Course', url: 'https://www.youtube.com/watch?v=jgpVdJB2sKQ', by: 'Traversy Media', level: 'Beginner', free: true }
+      },
+      'docker': {
+        icon: '🐳', name: 'Docker',
+        linkedin: { title: 'Docker Essential Training', url: 'https://www.linkedin.com/learning/docker-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Docker Full Course', url: 'https://www.youtube.com/watch?v=fqMOX6JJhGo', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'kubernetes': {
+        icon: '☸️', name: 'Kubernetes',
+        linkedin: { title: 'Kubernetes Essential Training', url: 'https://www.linkedin.com/learning/kubernetes-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Kubernetes Full Course', url: 'https://www.youtube.com/watch?v=X48VuDVv0do', by: 'TechWorld with Nana', level: 'Intermediate', free: true }
+      },
+      'aws': {
+        icon: '☁️', name: 'AWS',
+        nptel: { title: 'Cloud Computing', url: 'https://nptel.ac.in/courses/106105167', by: 'Prof. S.K. Ghosh · IIT Kharagpur', level: 'Intermediate', free: true },
+        linkedin: { title: 'AWS Essential Training for Developers', url: 'https://www.linkedin.com/learning/aws-essential-training-for-developers-17237791?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'AWS Full Course', url: 'https://www.youtube.com/watch?v=k1RI5locZE4', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'AWS Cloud Practitioner Essentials', url: 'https://www.coursera.org/learn/aws-cloud-practitioner-essentials', by: 'AWS', level: 'Beginner', free: false }
+      },
+      'azure': {
+        icon: '🔵', name: 'Azure',
+        linkedin: { title: 'Azure Essential Training', url: 'https://www.linkedin.com/learning/azure-essential-training-for-developers?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Microsoft Azure Full Course', url: 'https://www.youtube.com/watch?v=NKEFWyqJ5XA', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'gcp': {
+        icon: '🌈', name: 'Google Cloud',
+        linkedin: { title: 'Google Cloud Platform Essential Training', url: 'https://www.linkedin.com/learning/google-cloud-platform-gcp-essential-training-for-administrators?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Google Cloud Full Course', url: 'https://www.youtube.com/watch?v=M988_fsOSWo', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'terraform': {
+        icon: '🏗️', name: 'Terraform',
+        linkedin: { title: 'Learning Terraform', url: 'https://www.linkedin.com/learning/learning-terraform-2?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Terraform Full Course', url: 'https://www.youtube.com/watch?v=SLB_c_ayRMo', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'linux': {
+        icon: '🐧', name: 'Linux',
+        nptel: { title: 'Introduction to Linux', url: 'https://nptel.ac.in/courses/117106113', by: 'IIT Madras', level: 'Beginner', free: true },
+        linkedin: { title: 'Linux Essential Training', url: 'https://www.linkedin.com/learning/linux-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Linux Full Course', url: 'https://www.youtube.com/watch?v=wBp0Rb-ZJak', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'git': {
+        icon: '🌿', name: 'Git',
+        linkedin: { title: 'Git Essential Training', url: 'https://www.linkedin.com/learning/git-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Git & GitHub Full Course', url: 'https://www.youtube.com/watch?v=RGOj5yH7evk', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'ci/cd': {
+        icon: '🔄', name: 'CI/CD',
+        linkedin: { title: 'DevOps Foundations: CI/CD', url: 'https://www.linkedin.com/learning/devops-foundations-continuous-delivery-continuous-integration?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'CI/CD Pipeline Full Course', url: 'https://www.youtube.com/watch?v=2TTU5BB-k9U', by: 'TechWorld with Nana', level: 'Intermediate', free: true }
+      },
+      'machine learning': {
+        icon: '🤖', name: 'Machine Learning',
+        nptel: { title: 'Introduction to Machine Learning', url: 'https://nptel.ac.in/courses/106106139', by: 'Prof. Balaraman Ravindran · IIT Madras', level: 'Intermediate', free: true },
+        linkedin: { title: 'Machine Learning Foundations', url: 'https://www.linkedin.com/learning/machine-learning-foundations-supervised-learning?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Machine Learning Full Course', url: 'https://www.youtube.com/watch?v=NWONeJKn9Eg', by: 'freeCodeCamp', level: 'Intermediate', free: true },
+        coursera: { title: 'Machine Learning Specialization', url: 'https://www.coursera.org/specializations/machine-learning-introduction', by: 'Andrew Ng · Stanford', level: 'Intermediate', free: false }
+      },
+      'deep learning': {
+        icon: '🧠', name: 'Deep Learning',
+        nptel: { title: 'Deep Learning for Computer Vision', url: 'https://nptel.ac.in/courses/106106184', by: 'Prof. Vineeth N B · IIT Hyderabad', level: 'Advanced', free: true },
+        linkedin: { title: 'Deep Learning: Getting Started', url: 'https://www.linkedin.com/learning/deep-learning-getting-started?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Advanced', free: false },
+        youtube: { title: 'Deep Learning Full Course', url: 'https://www.youtube.com/watch?v=VyWAvY2CF9c', by: 'freeCodeCamp', level: 'Advanced', free: true },
+        coursera: { title: 'Deep Learning Specialization', url: 'https://www.coursera.org/specializations/deep-learning', by: 'Andrew Ng · deeplearning.ai', level: 'Advanced', free: false }
+      },
+      'tensorflow': {
+        icon: '🔶', name: 'TensorFlow',
+        linkedin: { title: 'TensorFlow: Working with Images', url: 'https://www.linkedin.com/learning/tensorflow-working-with-images?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'TensorFlow 2.0 Full Course', url: 'https://www.youtube.com/watch?v=tPYj3fFJGjk', by: 'freeCodeCamp', level: 'Intermediate', free: true },
+        coursera: { title: 'DeepLearning.AI TensorFlow Developer', url: 'https://www.coursera.org/professional-certificates/tensorflow-in-practice', by: 'deeplearning.ai', level: 'Intermediate', free: false }
+      },
+      'pytorch': {
+        icon: '🔥', name: 'PyTorch',
+        linkedin: { title: 'PyTorch Essential Training', url: 'https://www.linkedin.com/learning/pytorch-essential-training-deep-learning?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'PyTorch Full Course', url: 'https://www.youtube.com/watch?v=Z_ikDlimN6A', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'nlp': {
+        icon: '💬', name: 'NLP',
+        nptel: { title: 'Natural Language Processing', url: 'https://nptel.ac.in/courses/106106215', by: 'Prof. Pushpak Bhattacharyya · IIT Bombay', level: 'Advanced', free: true },
+        linkedin: { title: 'NLP with Python for Machine Learning', url: 'https://www.linkedin.com/learning/nlp-with-python-for-machine-learning-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Advanced', free: false },
+        youtube: { title: 'NLP Full Course', url: 'https://www.youtube.com/watch?v=X2vAabgKiuM', by: 'freeCodeCamp', level: 'Advanced', free: true }
+      },
+      'llm': {
+        icon: '🧬', name: 'Large Language Models',
+        linkedin: { title: 'Prompt Engineering for LLMs', url: 'https://www.linkedin.com/learning/prompt-engineering-how-to-talk-to-the-ais?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'LLMs & Generative AI Full Course', url: 'https://www.youtube.com/watch?v=d4yCWBGFCEs', by: 'freeCodeCamp', level: 'Intermediate', free: true },
+        coursera: { title: 'Generative AI with LLMs', url: 'https://www.coursera.org/learn/generative-ai-with-llms', by: 'DeepLearning.AI · AWS', level: 'Intermediate', free: false }
+      },
+      'generative ai': {
+        icon: '✨', name: 'Generative AI',
+        linkedin: { title: 'Introduction to Generative AI', url: 'https://www.linkedin.com/learning/introduction-to-artificial-intelligence?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Generative AI for Everyone', url: 'https://www.youtube.com/watch?v=LWiMwhDZ9as', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'Generative AI for Everyone', url: 'https://www.coursera.org/learn/generative-ai-for-everyone', by: 'Andrew Ng · deeplearning.ai', level: 'Beginner', free: false }
+      },
+      'data analysis': {
+        icon: '📈', name: 'Data Analysis',
+        nptel: { title: 'Python for Data Science', url: 'https://nptel.ac.in/courses/106106212', by: 'Prof. B.V. Phani · IIT Madras', level: 'Intermediate', free: true },
+        linkedin: { title: 'Data Analysis Foundations', url: 'https://www.linkedin.com/learning/data-analysis-foundations?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Data Analysis with Python', url: 'https://www.youtube.com/watch?v=GPVsHOlRBBI', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'IBM Data Analyst Professional Certificate', url: 'https://www.coursera.org/professional-certificates/ibm-data-analyst', by: 'IBM', level: 'Beginner', free: false }
+      },
+      'pandas': {
+        icon: '🐼', name: 'Pandas',
+        linkedin: { title: 'Pandas Essential Training', url: 'https://www.linkedin.com/learning/pandas-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Pandas Full Course', url: 'https://www.youtube.com/watch?v=vmEHCJofslg', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'power bi': {
+        icon: '📉', name: 'Power BI',
+        linkedin: { title: 'Power BI Essential Training', url: 'https://www.linkedin.com/learning/power-bi-essential-training-2?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Power BI Full Course', url: 'https://www.youtube.com/watch?v=TmhQCQr_Jdw', by: 'freeCodeCamp', level: 'Beginner', free: true }
+      },
+      'tableau': {
+        icon: '📊', name: 'Tableau',
+        linkedin: { title: 'Tableau Essential Training', url: 'https://www.linkedin.com/learning/tableau-essential-training-14959992?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Tableau Full Course', url: 'https://www.youtube.com/watch?v=aHaOIvR00So', by: 'Simplilearn', level: 'Beginner', free: true }
+      },
+      'django': {
+        icon: '🎸', name: 'Django',
+        linkedin: { title: 'Django Essential Training', url: 'https://www.linkedin.com/learning/django-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Django Full Course', url: 'https://www.youtube.com/watch?v=rHux0gMZ3Eg', by: 'Programming with Mosh', level: 'Intermediate', free: true }
+      },
+      'flask': {
+        icon: '🌶️', name: 'Flask',
+        linkedin: { title: 'Building RESTful APIs with Flask', url: 'https://www.linkedin.com/learning/building-restful-apis-with-flask?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'Flask Full Course', url: 'https://www.youtube.com/watch?v=Z1RJmh_OqeA', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'fastapi': {
+        icon: '⚡', name: 'FastAPI',
+        linkedin: { title: 'FastAPI Essential Training', url: 'https://www.linkedin.com/learning/fastapi-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'FastAPI Full Course', url: 'https://www.youtube.com/watch?v=7t2alSnE2-I', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'figma': {
+        icon: '🖌️', name: 'Figma',
+        linkedin: { title: 'Figma Essential Training', url: 'https://www.linkedin.com/learning/figma-essential-training-the-basics?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Figma Full Course', url: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'Google UX Design Certificate', url: 'https://www.coursera.org/professional-certificates/google-ux-design', by: 'Google', level: 'Beginner', free: false }
+      },
+      'cybersecurity': {
+        icon: '🔐', name: 'Cybersecurity',
+        nptel: { title: 'Introduction to Cyber Security', url: 'https://nptel.ac.in/courses/106105031', by: 'IIT Kharagpur', level: 'Beginner', free: true },
+        linkedin: { title: 'Cybersecurity Foundations', url: 'https://www.linkedin.com/learning/cybersecurity-foundations?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Cybersecurity Full Course', url: 'https://www.youtube.com/watch?v=inWWhr5tnEA', by: 'freeCodeCamp', level: 'Beginner', free: true },
+        coursera: { title: 'Google Cybersecurity Certificate', url: 'https://www.coursera.org/professional-certificates/google-cybersecurity', by: 'Google', level: 'Beginner', free: false }
+      },
+      'data structures': {
+        icon: '🌲', name: 'Data Structures',
+        nptel: { title: 'Data Structures and Algorithms', url: 'https://nptel.ac.in/courses/106106127', by: 'Prof. Naveen Garg · IIT Delhi', level: 'Intermediate', free: true },
+        linkedin: { title: 'Programming Foundations: Data Structures', url: 'https://www.linkedin.com/learning/programming-foundations-data-structures-2?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Data Structures Full Course', url: 'https://www.youtube.com/watch?v=pkYVOmU3MgA', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      },
+      'java': {
+        icon: '☕', name: 'Java',
+        nptel: { title: 'Programming in Java', url: 'https://nptel.ac.in/courses/106105191', by: 'Prof. Debasis Samanta · IIT Kharagpur', level: 'Intermediate', free: true },
+        linkedin: { title: 'Java Essential Training', url: 'https://www.linkedin.com/learning/java-essential-training-syntax-and-structure?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Java Full Course', url: 'https://www.youtube.com/watch?v=GoXwIVyNvX0', by: 'Amigoscode', level: 'Beginner', free: true }
+      },
+      'agile': {
+        icon: '🔁', name: 'Agile / Scrum',
+        linkedin: { title: 'Agile Foundations', url: 'https://www.linkedin.com/learning/agile-foundations?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Beginner', free: false },
+        youtube: { title: 'Agile Methodology Full Course', url: 'https://www.youtube.com/watch?v=8eVXTyIZ1Hs', by: 'Simplilearn', level: 'Beginner', free: true }
+      },
+      'graphql': {
+        icon: '🔮', name: 'GraphQL',
+        linkedin: { title: 'GraphQL Essential Training', url: 'https://www.linkedin.com/learning/graphql-essential-training?uiLocale=en_US', by: 'LinkedIn Learning', level: 'Intermediate', free: false },
+        youtube: { title: 'GraphQL Full Course', url: 'https://www.youtube.com/watch?v=ed8SzALpx1Q', by: 'freeCodeCamp', level: 'Intermediate', free: true }
+      }
+    };
+
+    const PLATFORM_CONFIG = {
+      nptel: { label: 'NPTEL', cls: 'pill-nptel', icon: '🎓', bg: 'pi-nptel', name: 'NPTEL (Free IIT)' },
+      linkedin: { label: 'LinkedIn', cls: 'pill-linkedin', icon: '💼', bg: 'pi-linkedin', name: 'LinkedIn Learning' },
+      youtube: { label: 'YouTube', cls: 'pill-youtube', icon: '▶️', bg: 'pi-youtube', name: 'YouTube (Free)' },
+      coursera: { label: 'Coursera', cls: 'pill-coursera', icon: '📚', bg: 'pi-coursera', name: 'Coursera' },
+      udemy: { label: 'Udemy', cls: 'pill-udemy', icon: '🎯', bg: 'pi-udemy', name: 'Udemy' }
+    };
+
+    /* ══════════════════════════════════════════
+       STATE & HELPERS
+    ══════════════════════════════════════════ */
+    let currentResults = null;
+
+    function showTab(tabName, el) {
+      document.getElementById('tab-analyser').style.display = tabName === 'analyser' ? 'block' : 'none';
+      document.getElementById('tab-courses').style.display = tabName === 'courses' ? 'block' : 'none';
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function setStep(n) {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('step' + i);
+        el.classList.remove('active', 'done');
+        if (i < n) el.classList.add('done');
+        if (i === n) el.classList.add('active');
+      }
+    }
+
+    /* ══════════════════════════════════════════
+       FILE HANDLING
+    ══════════════════════════════════════════ */
+    function handleFile(inp) {
+      const file = inp.files[0];
+      if (!file) return;
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileBadge').style.display = 'block';
+      document.getElementById('uploadTitle').textContent = 'File selected ✓';
+      const reader = new FileReader();
+      reader.onload = e => { document.getElementById('resumeText').value = e.target.result; };
+      reader.readAsText(file);
+    }
+
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragging'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('dragging');
+      const f = e.dataTransfer.files[0];
+      if (f) handleFile({ files: e.dataTransfer.files });
+    });
+
+    /* ══════════════════════════════════════════
+       MAIN ANALYSIS  ← CORS FIX: use fetch with proper mode
+       Gemini REST API works fine from browsers when called correctly
+    ══════════════════════════════════════════ */
+    async function analyseResume() {
+      const resumeText = document.getElementById('resumeText').value.trim();
+      const apiKey = 'AIzaSyAOMeLzS0yN5wgbWqdi8nJD6jNpcjZ5WZk';
+      const targetRole = document.getElementById('targetRole').value;
+      const errBox = document.getElementById('errorBox');
+
+      errBox.classList.remove('show');
+
+      if (!resumeText) {
+        errBox.textContent = '⚠️ Please upload or paste your resume first.';
+        errBox.classList.add('show'); return;
+      }
+
+      const btn = document.getElementById('analyseBtn');
+      btn.disabled = true;
+      document.getElementById('btnSpinner').style.display = 'inline-block';
+      document.getElementById('btnText').textContent = 'Analysing…';
+      document.getElementById('loader').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('results').innerHTML = '';
+      setStep(1);
+
+      const availableSkills = Object.keys(COURSES_DB).map(k => COURSES_DB[k].name).join(', ');
+
+      // Handle 'All Roles' — let AI auto-detect the best-fit role from the resume
+      const isAllRoles = targetRole === 'All Roles';
+      const roleInstruction = isAllRoles
+        ? 'AUTO-DETECT the single best-fit role for this candidate based on their resume. Set "best_fit_role" in the response to the role you detected.'
+        : `TARGET ROLE: "${targetRole}"`;
+      const trendingRoleHint = isAllRoles ? 'the best-fit role you detected' : targetRole;
+
+      const prompt = `You are an expert career coach and technical recruiter. Carefully analyse this resume and return ONLY a valid JSON object — no markdown, no extra text, no code fences.
+
+${roleInstruction}
+
+RESUME:
+${resumeText.substring(0, 4000)}
+
+AVAILABLE COURSE SKILLS (use ONLY these for skill_gaps): ${availableSkills}
+
+Return this exact JSON structure:
+{
+  "name": "candidate full name (or 'Candidate' if not found)",
+  "best_fit_role": "the detected or specified target role",
+  "profile": "one powerful sentence summarising the candidate",
+  "experience_level": "Fresher|Junior|Mid-level|Senior|Expert",
+  "education": "highest degree + field",
+  "detected_skills": ["lowercased skill 1", "lowercased skill 2"],
+  "eligibility_score": 65,
+  "eligibility_verdict": "Strong Candidate|Good Candidate|Partial Match|Needs Development",
+  "matched_skills": ["skills from resume that match target role"],
+  "missing_skills": ["critical skills missing for target role"],
+  "linkedin_trending": ["top 6 skills currently trending for ${trendingRoleHint} in 2024-25"],
+  "skill_gaps": [
+    {
+      "skill": "exact name from AVAILABLE COURSE SKILLS",
+      "reason": "specific 1-sentence reason based on their background",
+      "priority": "high|medium",
+      "linkedin_demand": "High|Medium|Growing"
+    }
+  ],
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "summary": "2-sentence analysis for this candidate targeting this role"
+}
+
+Rules:
+- eligibility_score: 0-100 integer
+- skill_gaps: max 6, only from AVAILABLE COURSE SKILLS, only skills they do NOT have
+- best_fit_role: always fill this (auto-detect if All Roles was selected)
+- All analysis must be specific to THIS candidate and THIS role`;
+
+      try {
+        setTimeout(() => setStep(2), 700);
+        setTimeout(() => setStep(3), 1500);
+
+        // ── DO NOT CHANGE THIS MODEL — gemini-1.5-flash is NOT available on this API key ──
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.3,
+              maxOutputTokens: 2048,
+              responseMimeType: 'application/json'   // ← forces clean JSON back
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          const msg = errData?.error?.message || `HTTP ${response.status}`;
+          throw new Error(msg);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        // Strip any accidental markdown fences
+        const clean = rawText.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+
+        let json;
+        try {
+          json = JSON.parse(clean);
+        } catch (pe) {
+          // Try extracting JSON object from response
+          const match = clean.match(/\{[\s\S]*\}/);
+          if (match) json = JSON.parse(match[0]);
+          else throw new Error('Could not parse AI response. Try again.');
+        }
+
+        setStep(4);
+        await new Promise(r => setTimeout(r, 500));
+
+        // Use AI-detected role if 'All Roles' was selected
+        const effectiveRole = isAllRoles ? (json.best_fit_role || 'General Role') : targetRole;
+        currentResults = json;
+        renderResults(json, effectiveRole);
+
+      } catch (err) {
+        document.getElementById('loader').style.display = 'none';
+        let msg = err.message || 'Unknown error';
+        if (msg.includes('API_KEY_INVALID') || msg.includes('API key')) {
+          msg = 'Invalid Gemini API key. Get one free at aistudio.google.com';
+        } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+          msg = 'Network error. Check your internet connection and that the API key is valid.';
+        }
+        errBox.textContent = '❌ ' + msg;
+        errBox.classList.add('show');
+      }
+
+      btn.disabled = false;
+      document.getElementById('btnSpinner').style.display = 'none';
+      document.getElementById('btnText').textContent = 'Analyse Resume & Match Role';
+      document.getElementById('loader').style.display = 'none';
+    }
+
+    /* ══════════════════════════════════════════
+       RENDER RESULTS
+    ══════════════════════════════════════════ */
+    function renderResults(d, targetRole) {
+      const res = document.getElementById('results');
+      res.style.display = 'block';
+
+      const score = parseInt(d.eligibility_score) || 0;
+      const verdictClass = score >= 70 ? 'verdict-high' : score >= 45 ? 'verdict-mid' : 'verdict-low';
+      const verdictIcon = score >= 70 ? '✅' : score >= 45 ? '⚡' : '📈';
+      const ringColor = score >= 70 ? 'var(--green)' : score >= 45 ? 'var(--gold)' : 'var(--red)';
+      const ringColorHex = score >= 70 ? '#3ddc84' : score >= 45 ? '#f5c842' : '#ff4d6a';
+      const circumference = 2 * Math.PI * 54;
+      const offset = circumference * (1 - score / 100);
+
+      const matched = (d.matched_skills || []).length;
+      const total = matched + (d.missing_skills || []).length;
+      const matchPct = total ? Math.round(matched / total * 100) : 0;
+      const trendPct = Math.min(Math.round(score * 1.05), 100);
+      const gapSkills = (d.skill_gaps || []).slice(0, 6);
+
+      res.innerHTML = `
+    <!-- Candidate -->
+    <div class="candidate-header animate-fadeUp">
+      <div class="candidate-avatar">${(d.name || 'C')[0].toUpperCase()}</div>
+      <div style="flex:1">
+        <div class="candidate-name">${d.name || 'Candidate'}</div>
+        <div class="candidate-profile">${d.profile || ''}</div>
+        <div class="candidate-chips">
+          <span class="badge badge-purple">${d.experience_level || 'N/A'}</span>
+          <span class="badge badge-gold">${d.education || ''}</span>
+          <span class="badge badge-green">🎯 ${targetRole}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card animate-fadeUp">
+        <div class="stat-value">${score}</div>
+        <div class="stat-label">Eligibility Score</div>
+      </div>
+      <div class="stat-card animate-fadeUp" style="animation-delay:.1s">
+        <div class="stat-value" style="color:var(--green)">${matched}</div>
+        <div class="stat-label">Skills Matched</div>
+      </div>
+      <div class="stat-card animate-fadeUp" style="animation-delay:.15s">
+        <div class="stat-value" style="color:var(--red)">${(d.missing_skills || []).length}</div>
+        <div class="stat-label">Skills Missing</div>
+      </div>
+      <div class="stat-card animate-fadeUp" style="animation-delay:.2s">
+        <div class="stat-value" style="color:var(--blue)">${gapSkills.length}</div>
+        <div class="stat-label">Courses Ready</div>
+      </div>
+    </div>
+
+    <!-- Detected Skills -->
+    <div class="section-label">Detected Skills (${(d.detected_skills || []).length} found)</div>
+    <div class="skill-tags" style="margin-bottom:24px">
+      ${(d.detected_skills || []).map(s => `<span class="skill-tag">${s}</span>`).join('')}
+    </div>
+
+    <!-- Eligibility Card -->
+    <div class="section-label">Eligibility Score for ${targetRole}</div>
+    <div class="eligibility-card animate-fadeUp">
+      <div class="score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="ring-track" cx="70" cy="70" r="54"/>
+          <circle class="ring-fill" id="ringFill" cx="70" cy="70" r="54"
+            stroke="${ringColorHex}"
+            stroke-dasharray="${circumference}"
+            stroke-dashoffset="${circumference}"/>
+        </svg>
+        <div class="score-ring-label">
+          <span class="score-big" style="color:${ringColor}">${score}</span>
+          <span class="score-pct">/ 100</span>
+        </div>
+      </div>
+      <div>
+        <div class="elig-role">Target Role</div>
+        <div class="elig-title">${targetRole}</div>
+        <span class="elig-verdict ${verdictClass}">${verdictIcon} ${d.eligibility_verdict || 'Analysed'}</span>
+        <div class="elig-sub">${d.summary || ''}</div>
+        <div class="skill-breakdown">
+          <div class="breakdown-row">
+            <span class="breakdown-label">Skills Matched</span>
+            <div class="breakdown-bar"><div class="breakdown-fill progress-fill-green" id="bar1" style="width:0%"></div></div>
+            <span class="breakdown-val" style="color:var(--green)">${matched}/${total}</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">Role Alignment</span>
+            <div class="breakdown-bar"><div class="breakdown-fill" id="bar2" style="width:0%;background:${ringColor}"></div></div>
+            <span class="breakdown-val" style="color:${ringColor}">${score}%</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">LinkedIn Trend</span>
+            <div class="breakdown-bar"><div class="breakdown-fill progress-fill-blue" id="bar3" style="width:0%"></div></div>
+            <span class="breakdown-val" style="color:var(--blue)">${trendPct}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strengths + Missing -->
+    <div class="grid-2 two-col-grid" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-title">💪 Your Strengths</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+          ${(d.strengths || []).map(s => `
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;padding:10px;background:var(--greenDim);border:1px solid rgba(61,220,132,.15);border-radius:var(--rad-sm)">
+              <span style="color:var(--green);flex-shrink:0">✓</span><span>${s}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">❌ Missing for Role</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+          ${(d.missing_skills || []).slice(0, 5).map(s => `
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;padding:10px;background:var(--redDim);border:1px solid rgba(255,77,106,.15);border-radius:var(--rad-sm)">
+              <span style="color:var(--red);flex-shrink:0">✗</span><span>${s}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- LinkedIn Trending -->
+    <div class="section-label">LinkedIn Trending Skills for ${targetRole} (2025)</div>
+    <div class="skill-tags" style="margin-bottom:24px">
+      ${(d.linkedin_trending || []).map(s => `
+        <span class="skill-tag trending">
+          <span style="width:5px;height:5px;background:var(--blue);border-radius:50%;display:inline-block"></span>
+          ${s}
+        </span>`).join('')}
+    </div>
+
+    <!-- Skill Gaps -->
+    <div class="card" style="margin-bottom:20px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+        <div>
+          <div class="card-title">🚀 Personalised Learning Path</div>
+          <div class="card-subtitle" style="margin-bottom:0">Based on your resume, role & LinkedIn trends. Click any skill for courses.</div>
+        </div>
+        <span class="badge badge-gold">
+          <span style="width:5px;height:5px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite"></span>
+          LinkedIn Trending
+        </span>
+      </div>
+      <div class="gap-skills-grid" id="gapGrid">
+        ${gapSkills.map(g => {
+        const key = g.skill.toLowerCase();
+        const dbEntry = COURSES_DB[key];
+        const icon = dbEntry ? dbEntry.icon : '📚';
+        return `<div class="gap-skill-card" onclick="openModal('${g.skill.replace(/'/g, "\\'")}','${(g.reason || '').replace(/'/g, "\\'")}')">
+            <div class="gap-priority-tag priority-${g.priority}">${g.priority === 'high' ? '🔥 Must' : '⭐ Rec'}</div>
+            <span class="gap-skill-icon">${icon}</span>
+            <div class="gap-skill-name">${g.skill}</div>
+            <div class="gap-skill-demand">
+              <span class="demand-dot ${g.linkedin_demand === 'High' ? 'demand-high' : 'demand-medium'}"></span>
+              ${g.linkedin_demand || 'Growing'}
+            </div>
+            <div style="font-size:11px;margin-top:6px;color:${dbEntry ? 'var(--green)' : 'var(--textMut)'}">
+              ${dbEntry ? '📖 View courses →' : '🔍 Search online'}
+            </div>
+          </div>`;
+      }).join('')}
+      </div>
+    </div>
+
+    <!-- Courses -->
+    <div class="card" id="courses">
+      <div class="card-title" style="margin-bottom:4px">🎓 Recommended Courses to Close the Gap</div>
+      <div class="card-subtitle">Curated from NPTEL (free IIT), LinkedIn Learning, YouTube & Coursera</div>
+      <div class="course-filter-row">
+        <button class="cf-btn active" onclick="filterCourses(this,'all')">All Platforms</button>
+        <button class="cf-btn" onclick="filterCourses(this,'nptel')">🎓 NPTEL (Free)</button>
+        <button class="cf-btn" onclick="filterCourses(this,'linkedin')">💼 LinkedIn</button>
+        <button class="cf-btn" onclick="filterCourses(this,'youtube')">▶️ YouTube (Free)</button>
+        <button class="cf-btn" onclick="filterCourses(this,'coursera')">📚 Coursera</button>
+      </div>
+      <div class="course-list" id="courseList">
+        ${buildCoursesHTML(gapSkills, 'all')}
+      </div>
+    </div>
+  `;
+
+      setTimeout(() => {
+        const fill = document.getElementById('ringFill');
+        if (fill) fill.style.strokeDashoffset = offset;
+        const b1 = document.getElementById('bar1');
+        const b2 = document.getElementById('bar2');
+        const b3 = document.getElementById('bar3');
+        if (b1) b1.style.width = matchPct + '%';
+        if (b2) b2.style.width = score + '%';
+        if (b3) b3.style.width = trendPct + '%';
+      }, 200);
+
+      res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ══════════════════════════════════════════
+       COURSE BUILDER
+    ══════════════════════════════════════════ */
+    function buildCoursesHTML(gapSkills, platform) {
+      let html = '';
+      let count = 0;
+      const totalGaps = gapSkills.length || 1;
+
+      for (let i = 0; i < gapSkills.length; i++) {
+        const gap = gapSkills[i];
+        const key = gap.skill.toLowerCase();
+        const db = COURSES_DB[key];
+        if (!db) continue;
+
+        // Match % = how much this skill closes the gap (high priority = more weight)
+        const baseWeight = gap.priority === 'high' ? 85 : 65;
+        const demandBonus = gap.linkedin_demand === 'High' ? 10 : gap.linkedin_demand === 'Growing' ? 5 : 0;
+        const positionBonus = Math.round((1 - i / totalGaps) * 10);
+        const matchPct = Math.min(baseWeight + demandBonus + positionBonus, 98);
+
+        const platforms = platform === 'all' ? ['nptel', 'youtube', 'linkedin', 'coursera'] : [platform];
+        for (const p of platforms) {
+          if (!db[p]) continue;
+          const c = db[p];
+          const pc = PLATFORM_CONFIG[p] || PLATFORM_CONFIG['youtube'];
+          const cardId = `cm_${count}`;
+          count++;
+          html += `
+        <a class="course-card" href="${c.url}" target="_blank" rel="noopener noreferrer" data-platform="${p}">
+          <div class="course-platform-icon ${pc.bg}">${pc.icon}</div>
+          <div class="course-info">
+            <div class="course-badges">
+              <span class="platform-pill ${pc.cls}">${pc.label}</span>
+              <span class="level-pill">${c.level}</span>
+              ${c.free ? '<span class="free-pill">FREE</span>' : ''}
+            </div>
+            <div class="course-card-title">${c.title}</div>
+            <div class="course-card-meta">${c.by}</div>
+            <div class="course-skill-tags">
+              <span class="course-skill-badge">${db.name}</span>
+              <span class="course-skill-badge">${gap.priority === 'high' ? '🔥 High Priority' : '⭐ Recommended'}</span>
+            </div>
+            <div class="course-match-bar">
+              <div class="course-match-label">
+                <span class="course-match-text">Role Match</span>
+                <span class="course-match-pct">${matchPct}%</span>
+              </div>
+              <div class="course-match-track">
+                <div class="course-match-fill" id="${cardId}" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+          <span class="course-card-link">Open →</span>
+        </a>`;
+        }
+      }
+      if (count === 0) return `<div style="text-align:center;padding:40px;color:var(--textMut);font-size:14px">No courses found for this platform in your skill gaps.</div>`;
+
+      // Animate bars after render
+      setTimeout(() => {
+        let idx = 0;
+        for (let i = 0; i < gapSkills.length; i++) {
+          const gap = gapSkills[i];
+          const key = gap.skill.toLowerCase();
+          const db = COURSES_DB[key];
+          if (!db) continue;
+          const baseWeight = gap.priority === 'high' ? 85 : 65;
+          const demandBonus = gap.linkedin_demand === 'High' ? 10 : gap.linkedin_demand === 'Growing' ? 5 : 0;
+          const positionBonus = Math.round((1 - i / (gapSkills.length || 1)) * 10);
+          const matchPct = Math.min(baseWeight + demandBonus + positionBonus, 98);
+          const platforms2 = platform === 'all' ? ['nptel', 'youtube', 'linkedin', 'coursera'] : [platform];
+          for (const p of platforms2) {
+            if (!db[p]) continue;
+            const el = document.getElementById(`cm_${idx}`);
+            if (el) el.style.width = matchPct + '%';
+            idx++;
+          }
+        }
+      }, 100);
+
+      return html;
+    }
+
+    function filterCourses(btn, platform) {
+      document.querySelectorAll('.cf-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const gapSkills = currentResults?.skill_gaps || [];
+      document.getElementById('courseList').innerHTML = buildCoursesHTML(gapSkills, platform);
+    }
+
+    /* ══════════════════════════════════════════
+       MODAL
+    ══════════════════════════════════════════ */
+    function openModal(skillName, reason) {
+      const key = skillName.toLowerCase();
+      const db = COURSES_DB[key];
+      document.getElementById('modalTitle').textContent = skillName;
+      document.getElementById('modalSub').textContent = db ? 'Curated learning resources — click to open' : 'Search for this skill online';
+      const whyEl = document.getElementById('modalWhyBox');
+      whyEl.innerHTML = reason ? `<div class="modal-why-box"><strong>Why learn this?</strong> ${reason}</div>` : '';
+
+      const body = document.getElementById('modalBody');
+      if (!db) {
+        body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--textMut)">
+      <div style="font-size:2.5rem;margin-bottom:12px;opacity:.4">🔍</div>
+      <div style="font-family:var(--ff-head);font-size:15px;margin-bottom:8px">No saved courses</div>
+      <div style="font-size:13px">Search on <strong>nptel.ac.in</strong> or <strong>linkedin.com/learning</strong></div>
+    </div>`;
+        document.getElementById('modal').classList.add('open');
+        return;
+      }
+
+      let html = '';
+      for (const p of ['nptel', 'linkedin', 'youtube', 'coursera', 'udemy']) {
+        if (!db[p]) continue;
+        const c = db[p];
+        const pc = PLATFORM_CONFIG[p];
+        html += `
+      <div class="modal-section-label" style="margin-top:${html ? '16px' : '0'}">${pc.icon} ${pc.name}</div>
+      <div class="modal-course">
+        <div class="course-badges" style="margin-bottom:8px">
+          <span class="platform-pill ${pc.cls}">${pc.label}</span>
+          <span class="level-pill">${c.level}</span>
+          ${c.free ? '<span class="free-pill">FREE</span>' : ''}
+        </div>
+        <div class="modal-course-title">${c.title}</div>
+        <div class="modal-course-meta">${c.by}</div>
+        <a class="modal-open-btn" href="${c.url}" target="_blank" rel="noopener">Open Course →</a>
+      </div>`;
+      }
+
+      html += `<div class="modal-tip">
+    <span style="font-size:1.2rem;flex-shrink:0">💡</span>
+    <span>NPTEL is <strong style="color:var(--green)">completely free</strong> (IIT professors). YouTube is free. LinkedIn Learning requires a subscription. Coursera has a free audit mode.</span>
+  </div>`;
+
+      body.innerHTML = html;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function closeModal() { document.getElementById('modal').classList.remove('open'); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+</body>
+
+</html>

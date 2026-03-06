@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Market Demand — CareerAI</title>
+<link rel="stylesheet" href="/global.css">
+<style>
+.market-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.update-badge{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--textDim)}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.trend-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:28px}
+.trend-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:all .3s;position:relative;overflow:hidden}
+.trend-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold2),var(--gold))}
+.trend-card:hover{border-color:rgba(245,200,66,.3);transform:translateY(-2px)}
+.trend-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.trend-role{font-family:var(--ff-head);font-size:17px;font-weight:700}
+.trend-growth-badge{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;background:var(--greenDim);color:var(--green);border:1px solid rgba(61,220,132,.3)}
+.trend-salary{font-size:13px;color:var(--gold);font-weight:600;margin-bottom:10px}
+.trend-demand{font-size:12px;color:var(--textDim);margin-bottom:14px}
+.trend-skills-label{font-size:11px;font-weight:700;color:var(--textMut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.chart-section{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.bar-chart{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.bar-row{display:flex;align-items:center;gap:14px}
+.bar-label{font-size:13px;font-weight:600;width:180px;flex-shrink:0;color:var(--textDim)}
+.bar-track{flex:1;height:10px;background:var(--bg3);border-radius:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width 1s cubic-bezier(.4,0,.2,1)}
+.bar-value{font-size:12px;font-weight:700;color:var(--gold);width:40px;text-align:right}
+.hot-skills{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.hot-skill{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);padding:14px;text-align:center;transition:all .3s}
+.hot-skill:hover{border-color:var(--gold)}
+.hot-skill-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.hot-skill-heat{font-size:12px;color:var(--textDim)}
+@media(max-width:900px){.trend-cards,.hot-skills{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span style="font-size:22px">⚡</span>
+    <div>CareerAI<span>Intelligence Platform</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <a href="/dashboard" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <div class="nav-section-label">Tools</div>
+    <a href="/market" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      Live Market Demand
+    </a>
+    <a href="/aichat" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      AI Assistant
+    </a>
+    <a href="/resume" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Resume Analyzer
+    </a>
+    <a href="/mock-interview" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      Mock Interview
+    </a>
+    <a href="/learning" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Learning Hub
+    </a>
+    <div class="nav-section-label">Community</div>
+    <a href="/community" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Community Feed
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <img class="user-avatar" id="sidebarAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="avatar">
+      <div>
+        <div class="user-name" id="sidebarUsername">Loading…</div>
+        <div class="user-role">Career Explorer</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </div>
+</aside>
+<div class="main-content">
+  <div class="page-header">
+    <div class="page-title">Live Market Demand</div>
+    <div class="page-subtitle">Real-time job market trends and in-demand skills</div>
+  </div>
+  <div class="page-body">
+
+    <div class="market-header">
+      <div class="update-badge">
+        <div class="live-dot"></div>
+        <span id="updateTime">Loading market data…</span>
+      </div>
+      <a href="/learning" class="btn btn-secondary btn-sm">View Courses →</a>
+    </div>
+
+    <!-- Growth Chart -->
+    <div class="chart-section animate-fadeUp" style="margin-bottom:24px">
+      <div class="card-title">📊 Role Growth Rate (%)</div>
+      <div class="card-subtitle">Year-over-year demand growth by role</div>
+      <div class="bar-chart" id="growthChart"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Trend Cards -->
+    <div class="trend-cards" id="trendCards">
+      <div class="spinner" style="grid-column:1/-1"></div>
+    </div>
+
+    <!-- Hot Skills -->
+    <div class="chart-section animate-fadeUp">
+      <div class="card-title">🔥 Peak Skills Right Now</div>
+      <div class="card-subtitle">Most demanded individual skills across all roles</div>
+      <div class="hot-skills" id="hotSkills"></div>
+    </div>
+
+  </div>
+</div>
+</div>
+<script>
+const token=localStorage.getItem('token');
+const user=JSON.parse(localStorage.getItem('user')||'{}');
+if(!token) window.location.href='/';
+function logout(){localStorage.clear();window.location.href='/'}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const nameEl=document.getElementById('sidebarUsername');
+  const picEl=document.getElementById('sidebarAvatar');
+  if(nameEl) nameEl.textContent=user.username||'User';
+  if(picEl&&user.profile_pic) picEl.src=user.profile_pic;
+  document.querySelectorAll('.nav-item').forEach(a=>{if(a.getAttribute('href')===window.location.pathname)a.classList.add('active')});
+  loadMarket();
+});
+
+async function loadMarket(){
+  try{
+    const r=await fetch('/market/trends');
+    const d=await r.json();
+    renderMarket(d.trends);
+    document.getElementById('updateTime').textContent='Updated: '+new Date().toLocaleTimeString();
+  }catch(e){
+    document.getElementById('updateTime').textContent='Error loading data';
+  }
+}
+
+function demandColor(growth){
+  if(growth>=38) return 'var(--green)';
+  if(growth>=28) return 'var(--gold)';
+  return 'var(--blue)';
+}
+
+function renderMarket(trends){
+  const maxGrowth=Math.max(...trends.map(t=>t.growth));
+
+  // Bar chart
+  document.getElementById('growthChart').innerHTML=trends.map(t=>
+    '<div class="bar-row animate-fadeUp">'+
+    '<div class="bar-label">'+t.title+'</div>'+
+    '<div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,'+demandColor(t.growth*0.7)+','+demandColor(t.growth)+')" data-w="'+(t.growth/maxGrowth*100)+'"></div></div>'+
+    '<div class="bar-value">+'+t.growth+'%</div></div>'
+  ).join('');
+
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(el=>{el.style.width=el.dataset.w+'%'});
+  },100);
+
+  // Trend cards
+  document.getElementById('trendCards').innerHTML=trends.map(t=>
+    '<div class="trend-card animate-fadeUp">'+
+    '<div class="trend-card-header">'+
+    '<div class="trend-role">'+t.title+'</div>'+
+    '<div class="trend-growth-badge">↑ '+t.growth+'%</div></div>'+
+    '<div class="trend-salary">💰 '+t.salary+'</div>'+
+    '<div class="trend-demand">Demand: <strong style="color:'+demandColor(t.growth)+'">'+t.demand+'</strong></div>'+
+    '<div class="trend-skills-label">Required Skills</div>'+
+    '<div class="skill-tags">'+t.skills.map(s=>'<span class="skill-tag">'+s+'</span>').join('')+'</div>'+
+    '</div>'
+  ).join('');
+
+  // Hot skills frequency
+  const skillFreq={};
+  trends.forEach(t=>t.skills.forEach(s=>{skillFreq[s]=(skillFreq[s]||0)+t.growth}));
+  const sorted=Object.entries(skillFreq).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  document.getElementById('hotSkills').innerHTML=sorted.map(([skill,heat],i)=>
+    '<div class="hot-skill animate-fadeUp" style="animation-delay:'+i*.05+'s">'+
+    '<div class="hot-skill-name">'+skill+'</div>'+
+    '<div class="hot-skill-heat">'+['🔥🔥🔥','🔥🔥🔥','🔥🔥','🔥🔥','🔥🔥','🔥','🔥','🔥'][i]+' Hot</div>'+
+    '</div>'
+  ).join('');
+}
+</script>
+</body>
+</html>

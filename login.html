@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InterviewAI — Login</title>
+<link rel="stylesheet" href="/global.css">
+<style>
+  body::before{background-size:48px 48px}
+  .login-wrap{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-box{width:100%;max-width:460px;background:var(--panel);border:1px solid var(--border);border-radius:var(--rad-lg);padding:56px 44px;box-shadow:var(--shadow),var(--shadow-gold)}
+  .login-logo{font-family:var(--ff-head);font-size:34px;font-weight:800;color:var(--gold);letter-spacing:-1px;text-align:center;margin-bottom:6px}
+  .login-tagline{text-align:center;font-size:14px;color:var(--textDim);margin-bottom:40px}
+  .tabs{display:flex;background:var(--bg3);border-radius:var(--rad-sm);padding:4px;margin-bottom:32px;gap:4px}
+  .tab-btn{flex:1;padding:10px;background:transparent;border:none;color:var(--textDim);font-family:var(--ff-body);font-size:13px;font-weight:600;border-radius:6px;cursor:pointer;transition:all .25s}
+  .tab-btn.active{background:var(--panel);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .submit-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rad-sm);color:#000;font-family:var(--ff-head);font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;margin-top:8px}
+  .submit-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-gold)}
+  .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .pane{display:none}.pane.active{display:block;animation:fadeUp .35s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .brand-accent{width:60px;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;margin:0 auto 24px}
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-box animate-fadeUp">
+    <div class="login-logo">⚡ CareerAI</div>
+    <div class="brand-accent"></div>
+    <div class="login-tagline">Your intelligent career companion</div>
+
+    <div class="alert alert-error" id="errMsg"></div>
+    <div class="alert alert-success" id="okMsg"></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="pane active" id="loginPane">
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="lUser" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="lPass" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="submit-btn" id="loginBtn">Sign In →</button>
+      </form>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="pane" id="registerPane">
+      <form id="registerForm">
+        <div class="form-group">
+          <label class="form-label">Full Name / Email</label>
+          <input class="form-input" type="email" id="rEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="rUser" placeholder="Choose a username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="rPass" placeholder="Create a password" required>
+        </div>
+        <button type="submit" class="submit-btn" id="regBtn">Create Account →</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  if(localStorage.getItem('token')) window.location.href='/dashboard';
+
+  const tabs = document.querySelectorAll('.tab-btn');
+  function switchTab(t){
+    tabs.forEach(b=>b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+    document.getElementById(t+'Pane').classList.add('active');
+    clearMsgs();
+  }
+
+  function showErr(m){const e=document.getElementById('errMsg');e.textContent=m;e.classList.add('show');document.getElementById('okMsg').classList.remove('show')}
+  function showOk(m){const e=document.getElementById('okMsg');e.textContent=m;e.classList.add('show');document.getElementById('errMsg').classList.remove('show')}
+  function clearMsgs(){document.getElementById('errMsg').classList.remove('show');document.getElementById('okMsg').classList.remove('show')}
+
+  document.getElementById('loginForm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const btn=document.getElementById('loginBtn');
+    btn.disabled=true;btn.textContent='Signing in…';
+    try{
+      const r=await fetch('/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({username:document.getElementById('lUser').value,password:document.getElementById('lPass').value})});
+      const d=await r.json();
+      if(r.ok){
+        localStorage.setItem('token',d.token);localStorage.setItem('user',JSON.stringify(d.user));
+        showOk('Welcome back! Redirecting…');
+        setTimeout(()=>window.location.href='/dashboard',900);
+      } else showErr(d.error||'Login failed');
+    }catch(err){showErr('Connection error: '+err.message)}
+    finally{btn.disabled=false;btn.textContent='Sign In →'}
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const btn=document.getElementById('regBtn');
+    btn.disabled=true;btn.textContent='Creating account…';
+    try{
+      const r=await fetch('/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email:document.getElementById('rEmail').value,username:document.getElementById('rUser').value,password:document.getElementById('rPass').value})});
+      const d=await r.json();
+      if(r.ok){
+        localStorage.setItem('token',d.token);localStorage.setItem('user',JSON.stringify(d.user));
+        showOk('Account created! Redirecting…');
+        setTimeout(()=>window.location.href='/dashboard',900);
+      } else showErr(d.error||'Registration failed');
+    }catch(err){showErr('Connection error: '+err.message)}
+    finally{btn.disabled=false;btn.textContent='Create Account →'}
+  });
+</script>
+</body>
+</html>

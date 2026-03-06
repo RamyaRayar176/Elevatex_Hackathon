@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community — CareerAI</title>
+<link rel="stylesheet" href="/global.css">
+<style>
+.community-grid{display:grid;grid-template-columns:1fr 300px;gap:24px}
+.post-form{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.post-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:border-color .3s,box-shadow .3s}
+.post-card:hover{border-color:var(--border2)}
+.post-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.post-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--border2)}
+.post-author{font-weight:700;font-size:14px}
+.post-time{font-size:12px;color:var(--textMut)}
+.post-title{font-family:var(--ff-head);font-size:18px;font-weight:700;margin-bottom:10px;color:var(--text)}
+.post-content{font-size:14px;color:var(--textDim);line-height:1.7;margin-bottom:16px}
+.post-actions{display:flex;gap:16px;align-items:center;padding-top:12px;border-top:1px solid var(--border)}
+.action-btn{background:none;border:none;color:var(--textMut);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s;padding:6px 10px;border-radius:6px}
+.action-btn:hover{color:var(--gold);background:var(--goldDim)}
+.action-btn.liked{color:var(--gold)}
+.comments-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:none}
+.comment-item{display:flex;gap:10px;margin-bottom:12px}
+.comment-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;border:1px solid var(--border)}
+.comment-body{background:var(--bg3);border-radius:var(--rad-sm);padding:10px 14px;flex:1}
+.comment-author{font-size:12px;font-weight:700;color:var(--textDim);margin-bottom:3px}
+.comment-text{font-size:13px;color:var(--text)}
+.comment-input-row{display:flex;gap:8px;margin-top:12px}
+.comment-input-row input{flex:1;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);color:var(--text);font-family:var(--ff-body);font-size:13px}
+.comment-input-row input:focus{outline:none;border-color:var(--gold)}
+.sidebar-widget{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.widget-title{font-family:var(--ff-head);font-weight:700;font-size:15px;margin-bottom:16px}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:8px}
+.tag-pill{padding:5px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--textDim);cursor:pointer;transition:all .2s}
+.tag-pill:hover{border-color:var(--gold);color:var(--gold)}
+.tag-pill.active{background:var(--goldDim);border-color:rgba(245,200,66,.4);color:var(--gold)}
+@media(max-width:900px){.community-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span style="font-size:22px">⚡</span>
+    <div>CareerAI<span>Intelligence Platform</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <a href="/dashboard" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <div class="nav-section-label">Tools</div>
+    <a href="/market" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      Live Market Demand
+    </a>
+    <a href="/aichat" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      AI Assistant
+    </a>
+    <a href="/resume" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Resume Analyzer
+    </a>
+    <a href="/mock-interview" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      Mock Interview
+    </a>
+    <a href="/learning" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Learning Hub
+    </a>
+    <div class="nav-section-label">Community</div>
+    <a href="/community" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Community Feed
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <img class="user-avatar" id="sidebarAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" alt="avatar">
+      <div>
+        <div class="user-name" id="sidebarUsername">Loading…</div>
+        <div class="user-role">Career Explorer</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </div>
+</aside>
+<div class="main-content">
+  <div class="page-header">
+    <div class="page-title">Community Feed</div>
+    <div class="page-subtitle">Share insights, ask questions, and grow together</div>
+  </div>
+  <div class="page-body">
+    <div class="community-grid">
+      <div>
+        <!-- Post Form -->
+        <div class="post-form animate-fadeUp">
+          <div class="card-title" style="margin-bottom:16px">✍️ Share something</div>
+          <div class="alert alert-error" id="postErr"></div>
+          <div class="form-group">
+            <input class="form-input" id="postTitle" placeholder="Post title…">
+          </div>
+          <div class="form-group">
+            <textarea class="form-textarea" id="postContent" rows="4" placeholder="What's on your mind? Share interview tips, job search strategies, or ask for advice…"></textarea>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" onclick="submitPost()">Publish Post →</button>
+          </div>
+        </div>
+
+        <!-- Posts Feed -->
+        <div id="postsFeed">
+          <div class="empty-state"><div class="spinner"></div><p>Loading posts…</p></div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div>
+        <div class="sidebar-widget animate-fadeUp">
+          <div class="widget-title">🏷️ Explore Topics</div>
+          <div class="tag-cloud">
+            <span class="tag-pill active" onclick="filterTag(this,'')">All</span>
+            <span class="tag-pill" onclick="filterTag(this,'interview')">Interviews</span>
+            <span class="tag-pill" onclick="filterTag(this,'resume')">Resume</span>
+            <span class="tag-pill" onclick="filterTag(this,'career')">Career</span>
+            <span class="tag-pill" onclick="filterTag(this,'tech')">Tech</span>
+            <span class="tag-pill" onclick="filterTag(this,'salary')">Salary</span>
+            <span class="tag-pill" onclick="filterTag(this,'remote')">Remote</span>
+          </div>
+        </div>
+        <div class="sidebar-widget animate-fadeUp" style="animation-delay:.1s">
+          <div class="widget-title">📊 Community Stats</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--textDim)">Total Posts</span><span id="totalPosts" style="font-weight:700;color:var(--gold)">—</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--textDim)">Members</span><span style="font-weight:700;color:var(--gold)">Active</span></div>
+          </div>
+        </div>
+        <div class="sidebar-widget animate-fadeUp" style="animation-delay:.2s">
+          <div class="widget-title">💡 Community Tips</div>
+          <p style="font-size:13px;color:var(--textDim);line-height:1.7">Share your interview experiences to help others. The more specific you are, the more valuable it becomes!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+const token=localStorage.getItem('token');
+const user=JSON.parse(localStorage.getItem('user')||'{}');
+if(!token) window.location.href='/';
+
+function authHeaders(){return{'Content-Type':'application/json','Authorization':'Bearer '+token}}
+function logout(){localStorage.clear();window.location.href='/'}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const nameEl=document.getElementById('sidebarUsername');
+  const picEl=document.getElementById('sidebarAvatar');
+  if(nameEl) nameEl.textContent=user.username||'User';
+  if(picEl&&user.profile_pic) picEl.src=user.profile_pic;
+  document.querySelectorAll('.nav-item').forEach(a=>{if(a.getAttribute('href')===window.location.pathname)a.classList.add('active')});
+  loadPosts();
+});
+
+let allPosts=[];
+let activeTag='';
+
+async function loadPosts(){
+  try{
+    const r=await fetch('/community/posts');
+    const d=await r.json();
+    allPosts=d.posts;
+    document.getElementById('totalPosts').textContent=d.posts.length;
+    renderPosts(allPosts);
+  }catch(e){
+    document.getElementById('postsFeed').innerHTML='<div class="empty-state"><p>Error loading posts. Is the server running?</p></div>';
+  }
+}
+
+function filterTag(el, tag){
+  document.querySelectorAll('.tag-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  activeTag=tag;
+  const filtered=tag?allPosts.filter(p=>p.title.toLowerCase().includes(tag)||p.content.toLowerCase().includes(tag)):allPosts;
+  renderPosts(filtered);
+}
+
+function renderPosts(posts){
+  const feed=document.getElementById('postsFeed');
+  if(!posts.length){
+    feed.innerHTML='<div class="empty-state"><p>No posts yet. Be the first to share!</p></div>';
+    return;
+  }
+  feed.innerHTML=posts.map(p=>postCard(p)).join('');
+}
+
+function postCard(p){
+  const ago=timeAgo(p.created_at);
+  const liked=p.liked_by&&p.liked_by.includes(user.id);
+  return `<div class="post-card animate-fadeUp" id="card-${p.id}">
+    <div class="post-header">
+      <img class="post-avatar" src="${p.author_pic||'https://api.dicebear.com/7.x/avataaars/svg?seed='+p.author}" alt="">
+      <div><div class="post-author">${p.author}</div><div class="post-time">${ago}</div></div>
+    </div>
+    <div class="post-title">${escHtml(p.title)}</div>
+    <div class="post-content">${escHtml(p.content)}</div>
+    <div class="post-actions">
+      <button class="action-btn ${liked?'liked':''}" onclick="likePost('${p.id}',this)">
+        <svg width="16" height="16" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="likes-${p.id}">${p.likes}</span>
+      </button>
+      <button class="action-btn" onclick="toggleComments('${p.id}')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        ${p.comments.length} Comments
+      </button>
+    </div>
+    <div class="comments-section" id="comments-${p.id}">
+      ${p.comments.map(c=>`<div class="comment-item">
+        <img class="comment-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${c.author}" alt="">
+        <div class="comment-body"><div class="comment-author">${c.author}</div><div class="comment-text">${escHtml(c.text)}</div></div>
+      </div>`).join('')}
+      <div class="comment-input-row">
+        <input id="cin-${p.id}" placeholder="Write a comment…" onkeydown="if(event.key==='Enter')addComment('${p.id}')">
+        <button class="btn btn-primary btn-sm" onclick="addComment('${p.id}')">Post</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function timeAgo(iso){
+  const d=new Date(iso);const now=new Date();
+  const diff=Math.floor((now-d)/1000);
+  if(diff<60) return 'Just now';
+  if(diff<3600) return Math.floor(diff/60)+'m ago';
+  if(diff<86400) return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
+}
+
+function toggleComments(id){
+  const el=document.getElementById('comments-'+id);
+  el.style.display=el.style.display==='block'?'none':'block';
+}
+
+async function likePost(id, btn){
+  try{
+    const r=await fetch('/community/posts/'+id+'/like',{method:'POST',headers:authHeaders()});
+    const d=await r.json();
+    if(d.success){
+      document.getElementById('likes-'+id).textContent=d.likes;
+      btn.classList.toggle('liked');
+    }
+  }catch(e){}
+}
+
+async function addComment(pid){
+  const inp=document.getElementById('cin-'+pid);
+  const text=inp.value.trim();
+  if(!text) return;
+  try{
+    const r=await fetch('/community/posts/'+pid+'/comments',{method:'POST',headers:authHeaders(),body:JSON.stringify({text})});
+    const d=await r.json();
+    if(d.success){
+      const sec=document.getElementById('comments-'+pid);
+      const row=sec.querySelector('.comment-input-row');
+      const div=document.createElement('div');div.className='comment-item';
+      div.innerHTML='<img class="comment-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed='+user.username+'" alt=""><div class="comment-body"><div class="comment-author">'+user.username+'</div><div class="comment-text">'+escHtml(text)+'</div></div>';
+      sec.insertBefore(div,row);inp.value='';
+    }
+  }catch(e){}
+}
+
+async function submitPost(){
+  const title=document.getElementById('postTitle').value.trim();
+  const content=document.getElementById('postContent').value.trim();
+  const errEl=document.getElementById('postErr');
+  if(!title||!content){errEl.textContent='Title and content are required.';errEl.classList.add('show');return}
+  errEl.classList.remove('show');
+  try{
+    const r=await fetch('/community/posts',{method:'POST',headers:authHeaders(),body:JSON.stringify({title,content})});
+    const d=await r.json();
+    if(d.success){
+      document.getElementById('postTitle').value='';document.getElementById('postContent').value='';
+      loadPosts();
+    } else {errEl.textContent=d.error;errEl.classList.add('show')}
+  }catch(e){errEl.textContent='Error posting. Try again.';errEl.classList.add('show')}
+}
+</script>
+</body>
+</html>
